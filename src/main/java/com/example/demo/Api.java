@@ -31,13 +31,37 @@ public class Api {
     @RequestMapping(value = "matches/team/status", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Match> getMatchesByTeamStatus(@RequestParam(value = "name") String name,
-                                              @RequestParam(value = "status") String status) {
+                                                    @RequestParam(value = "status") String status) {
         DataSource data = DataSource.getInstance();
         List<Match> matches = data.getMatches();
         MatchStatus requestedStatus = MatchStatus.valueOf(status);
         matches.removeIf(match ->
                 !match.TeamA.getName().equals(name)
                         && !match.TeamB.getName().equals(name)
+                        && !match.status.equals(status));
+        return matches;
+    }
+
+    @RequestMapping(value = "matches/tournament", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Match> getMatchesByTournament(@RequestParam(value = "name") String name) {
+        DataSource data = DataSource.getInstance();
+        List<Match> matches = data.getMatches();
+        matches.removeIf(match ->
+                !match.Tournament.getName().equals(name));
+        return matches;
+        //        return new Team("A tem");
+    }
+
+    @RequestMapping(value = "matches/tournament/status", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Match> getMatchesByTournamentStatus(@RequestParam(value = "name") String name,
+                                                    @RequestParam(value = "status") String status) {
+        DataSource data = DataSource.getInstance();
+        List<Match> matches = data.getMatches();
+        MatchStatus requestedStatus = MatchStatus.valueOf(status);
+        matches.removeIf(match ->
+                !match.Tournament.getName().equals(name)
                         && !match.status.equals(status));
         return matches;
     }
